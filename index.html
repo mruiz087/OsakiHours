@@ -213,8 +213,19 @@
     </nav>
 
     <script src="js/app.js"></script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Instalador listo'))
+            .catch(err => console.log('Error al configurar instalador', err));
+        });
+      }
+    </script>
 </body>
 </html>
+
 
 
 
