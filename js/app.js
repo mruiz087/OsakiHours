@@ -300,4 +300,22 @@ function deleteCurrentDay() {
 
 function resetAllData() { if(confirm("¿Borrar?")) { localStorage.clear(); location.reload(); } }
 
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Si creaste el contenedor de instalación en el HTML, lo mostramos aquí
+    const installBtn = document.getElementById('install-container');
+    if (installBtn) installBtn.classList.remove('hidden');
+});
+
+// Función para llamar desde el botón de "Instalar" en Ajustes
+async function triggerInstall() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') deferredPrompt = null;
+    }
+}
 
