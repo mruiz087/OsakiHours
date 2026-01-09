@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OsakiHours Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .osaki-blue { background-color: #0072bc; }
+        .badge-M { color: #ca8a04; font-weight: 900; }
+        .badge-T { color: #ea580c; font-weight: 900; }
+        .badge-N { color: #4338ca; font-weight: 900; }
+        .day-vacation { background-color: #fff7ed !important; border-bottom: 3px solid #f97316 !important; }
+        .day-ap { background-color: #faf5ff !important; border-bottom: 3px solid #a855f7 !important; }
+        .day-holiday { background-color: #fef2f2 !important; border-bottom: 3px solid #ef4444 !important; }
+        .day-work { background-color: #eff6ff !important; border-bottom: 3px solid #3b82f6 !important; }
+        .day-off-contract { opacity: 0.3; background-color: #f1f5f9 !important; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .nav-btn.active { color: #0072bc; }
+        .shift-btn { transition: all 0.2s ease; border: 2px solid #f1f5f9; background: #f8fafc; color: #64748b; }
+        .shift-selected-M, .shift-selected-V-D { background-color: #eab308 !important; color: white !important; border-color: #ca8a04 !important; }
+        .shift-selected-T { background-color: #f97316 !important; color: white !important; border-color: #ea580c !important; }
+        .shift-selected-N, .shift-selected-V-N { background-color: #4338ca !important; color: white !important; border-color: #3730a3 !important; }
+        .balance-positive { color: #22c55e !important; }
+        .balance-negative { color: #ef4444 !important; }
+    </style>
+</head>
+<body class="bg-slate-50 pb-24">
+
+    <header class="osaki-blue text-white p-6 rounded-b-[2.5rem] shadow-xl sticky top-0 z-30">
+        <div class="flex justify-center items-center mb-4">
+            <h1 class="text-xl font-black italic tracking-tighter">OsakiHours</h1>
+        </div>
+        <div class="bg-white p-5 rounded-3xl shadow-inner text-center">
+            <p id="label-balance" class="text-[10px] font-black uppercase text-slate-400 mb-1">Balance Exceso / Defecto</p>
+            <div class="mb-3">
+                <span id="total-balance" class="text-5xl font-black text-slate-800 transition-colors">0h 00m</span>
+            </div>
+            <div class="flex justify-around items-center border-t border-slate-100 pt-3 mt-1">
+                <div class="text-center">
+                    <p id="label-vac-top" class="text-[9px] uppercase font-black text-orange-400">Vacaciones</p>
+                    <p class="text-lg font-black text-slate-700" id="remaining-vac">0h 00m</p>
+                </div>
+                <div class="w-px bg-slate-100 h-8"></div>
+                <div class="text-center">
+                    <p id="label-ap-top" class="text-[9px] uppercase font-black text-purple-500">Horas AP</p>
+                    <p class="text-lg font-black text-slate-700" id="remaining-ap">0h 00m</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="p-4">
+        <section id="tab-calendar" class="tab-content active space-y-4">
+            <div class="bg-white p-4 rounded-3xl border border-slate-200 grid grid-cols-2 gap-4 shadow-sm">
+                <div>
+                    <label id="label-start" class="text-[9px] font-bold text-slate-400 block mb-1 uppercase">Inicio Contrato</label>
+                    <input type="date" id="start-date" onchange="updateContract()" class="bg-slate-50 p-2 rounded-xl text-xs font-bold w-full border-none">
+                </div>
+                <div>
+                    <label id="label-end" class="text-[9px] font-bold text-slate-400 block mb-1 uppercase">Fin Contrato</label>
+                    <input type="date" id="end-date" onchange="updateContract()" class="bg-slate-50 p-2 rounded-xl text-xs font-bold w-full border-none">
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden">
+                <div class="osaki-blue p-4 flex justify-between items-center text-white text-xs font-bold uppercase">
+                    <button onclick="changeMonth(-1)" class="p-2 px-4"><i class="fas fa-chevron-left"></i></button>
+                    <span id="current-month-year"></span>
+                    <button onclick="changeMonth(1)" class="p-2 px-4"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="grid grid-cols-7 text-[10px] font-black text-slate-400 text-center py-3 bg-slate-50 border-b">
+                    <div>LU</div><div>MA</div><div>MI</div><div>JU</div><div>VI</div><div>SA</div><div>DO</div>
+                </div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-px bg-slate-200"></div>
+            </div>
+        </section>
+
+        <section id="tab-settings" class="tab-content space-y-6">
+            <h2 id="title-settings" class="text-sm font-black text-slate-800 uppercase tracking-widest px-2">Ajustes</h2>
+            
+            <div class="bg-white p-5 rounded-[2rem] border border-slate-200 shadow-sm">
+                <label id="label-lang" class="text-[10px] font-black text-slate-400 block uppercase border-b pb-2 mb-3">Idioma / Hizkuntza</label>
+                <div class="flex gap-2">
+                    <button onclick="changeLanguage('es')" id="lang-es" class="flex-1 py-3 rounded-xl text-xs font-bold border-2 transition-all">Español</button>
+                    <button onclick="changeLanguage('eu')" id="lang-eu" class="flex-1 py-3 rounded-xl text-xs font-bold border-2 transition-all">Euskara</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-[2rem] border border-slate-200 shadow-sm space-y-4">
+                <label id="label-holidays" class="text-[10px] font-black text-slate-400 block uppercase border-b pb-2">Festivos Locales</label>
+                <div class="flex gap-2">
+                    <input type="date" id="local-holiday-input" class="flex-1 p-3 bg-slate-50 rounded-xl text-xs font-bold border-none">
+                    <button id="btn-add-holiday" onclick="addLocalHoliday()" class="osaki-blue text-white px-4 rounded-xl text-xs font-bold">Añadir</button>
+                </div>
+                <div id="local-holidays-list" class="flex flex-wrap gap-2 pt-2"></div>
+            </div>
+
+            <div class="bg-white p-5 rounded-[2rem] border border-slate-200 space-y-6 shadow-sm">
+                <div class="space-y-4">
+                    <label id="label-bag" class="text-[10px] font-black text-slate-400 block uppercase border-b pb-2">Bolsa Anual (Horas)</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div><p class="text-[8px] font-bold mb-1">TRABAJO</p><input type="number" id="set-work" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
+                        <div><p id="label-set-vac" class="text-[8px] font-bold mb-1 text-orange-500">VACAC.</p><input type="number" id="set-vac" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
+                        <div><p class="text-[8px] font-bold mb-1 text-purple-500">AP</p><input type="number" id="set-ap" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <label id="label-shift-val" class="text-[10px] font-black text-slate-400 block uppercase border-b pb-2">Valores Turnos TRABAJO (Dec)</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><p class="text-[8px] font-bold mb-1 uppercase">Diurno (M/T)</p><input type="number" step="0.01" id="set-work-day" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
+                        <div><p class="text-[8px] font-bold mb-1 uppercase">Nocturno (N)</p><input type="number" step="0.01" id="set-work-night" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <label id="label-shift-apvac" class="text-[10px] font-black text-slate-400 block uppercase border-b pb-2">Valores AP / VACACIONES (Dec)</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><p class="text-[8px] font-bold mb-1 uppercase">Diurno</p><input type="number" step="0.01" id="set-apvac-day" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
+                        <div><p class="text-[8px] font-bold mb-1 uppercase">Nocturno</p><input type="number" step="0.01" id="set-apvac-night" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-data" class="tab-content space-y-4">
+            <h2 id="title-data" class="text-sm font-black text-slate-800 uppercase tracking-widest px-2">Datos y Backup</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <button onclick="exportToPDF()" class="bg-white p-6 rounded-[2rem] border border-slate-200 flex items-center gap-4 shadow-sm active:scale-95 transition-transform">
+                    <div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-xl"><i class="fas fa-file-pdf"></i></div>
+                    <div class="text-left">
+                        <p id="btn-pdf" class="font-bold text-slate-800">Descargar PDF</p>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">PDF</p>
+                    </div>
+                </button>
+                <button onclick="exportBackup()" class="bg-white p-6 rounded-[2rem] border border-slate-200 flex items-center gap-4 shadow-sm active:scale-95 transition-transform">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl"><i class="fas fa-file-export"></i></div>
+                    <div class="text-left">
+                        <p id="btn-export" class="font-bold text-slate-800">Exportar Copia JSON</p>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Backup</p>
+                    </div>
+                </button>
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-200 flex items-center gap-4 shadow-sm relative overflow-hidden">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl"><i class="fas fa-file-import"></i></div>
+                    <div class="text-left">
+                        <p id="btn-import" class="font-bold text-slate-800">Restaurar Copia</p>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">JSON</p>
+                    </div>
+                    <input type="file" id="import-file" class="absolute inset-0 opacity-0 cursor-pointer" accept=".json" onchange="importBackup(this)">
+                </div>
+                <div class="mt-8 border-t border-slate-200 pt-8">
+                    <button id="btn-reset" onclick="resetAllData()" class="w-full py-4 text-slate-400 font-bold uppercase text-[10px] tracking-widest">Borrar datos de contrato y turnos</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="shift-modal" class="fixed inset-0 bg-slate-900/70 hidden z-50 flex items-end">
+        <div class="bg-white w-full rounded-t-[2.5rem] p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="modal-date-title" class="font-black text-slate-800 text-lg uppercase">Fecha</h3>
+                <button onclick="closeModal()" class="text-slate-300 text-4xl">&times;</button>
+            </div>
+            <div class="space-y-6">
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="selectMainType('work')" id="type-work" class="type-btn p-4 rounded-xl border-2 text-[10px] font-bold uppercase">Laboral</button>
+                    <button onclick="selectMainType('vacation')" id="type-vacation" class="type-btn p-4 rounded-xl border-2 text-[10px] font-bold uppercase">Vacas</button>
+                    <button onclick="selectMainType('ap')" id="type-ap" class="type-btn p-4 rounded-xl border-2 text-[10px] font-bold uppercase">AP</button>
+                </div>
+                
+                <div id="shift-selector-container">
+                    <div id="shifts-work-ap" class="flex gap-3">
+                        <button onclick="setShift('M', this)" id="btn-M" class="shift-btn flex-1 py-5 rounded-2xl flex flex-col items-center gap-2"><i class="fas fa-sun text-lg"></i><span class="text-[10px] font-bold">M</span></button>
+                        <button onclick="setShift('T', this)" id="btn-T" class="shift-btn flex-1 py-5 rounded-2xl flex flex-col items-center gap-2"><i class="fas fa-cloud-sun text-lg"></i><span class="text-[10px] font-bold">T</span></button>
+                        <button onclick="setShift('N', this)" id="btn-N" class="shift-btn flex-1 py-5 rounded-2xl flex flex-col items-center gap-2"><i class="fas fa-moon text-lg"></i><span class="text-[10px] font-bold">N</span></button>
+                    </div>
+                    <div id="shifts-vacation" class="flex gap-3 hidden">
+                        <button onclick="setShift('V-D', this)" id="btn-V-D" class="shift-btn flex-1 py-5 rounded-2xl flex flex-col items-center gap-2"><i class="fas fa-sun text-lg text-orange-500"></i><span id="label-vac-day" class="text-[10px] font-bold">Diurna</span></button>
+                        <button onclick="setShift('V-N', this)" id="btn-V-N" class="shift-btn flex-1 py-5 rounded-2xl flex flex-col items-center gap-2"><i class="fas fa-moon text-lg text-orange-500"></i><span id="label-vac-night" class="text-[10px] font-bold">Nocturna</span></button>
+                    </div>
+                </div>
+
+                <div id="overlap-container">
+                    <label id="label-overlap" class="text-[10px] font-black text-slate-400 uppercase block mb-2 text-center">Solape (Minutos)</label>
+                    <input type="number" id="input-overlap" value="0" class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-center text-xl text-blue-600 border-none">
+                </div>
+                <div class="flex gap-3">
+                    <button id="btn-delete" onclick="deleteCurrentDay()" class="hidden bg-red-50 text-red-500 px-6 rounded-3xl font-bold text-[10px] uppercase">Borrar</button>
+                    <button id="btn-save" onclick="saveShift()" class="flex-1 osaki-blue text-white py-5 rounded-3xl font-black uppercase text-xs tracking-widest">Guardar</button>
+                </div>
+            </div>
+            <input type="hidden" id="input-date">
+        </div>
+    </div>
+
+    <nav class="fixed bottom-0 w-full bg-white/90 backdrop-blur-md border-t p-4 flex justify-around items-center z-40">
+        <button onclick="showTab('calendar')" id="nav-calendar" class="nav-btn active flex flex-col items-center"><i class="fas fa-calendar-alt text-xl"></i><span id="nav-label-cal" class="text-[9px] font-bold mt-1 uppercase">Calendario</span></button>
+        <button onclick="showTab('settings')" id="nav-settings" class="nav-btn text-slate-400 flex flex-col items-center"><i class="fas fa-cog text-xl"></i><span id="nav-label-set" class="text-[9px] font-bold mt-1 uppercase">Ajustes</span></button>
+        <button onclick="showTab('data')" id="nav-data" class="nav-btn text-slate-400 flex flex-col items-center"><i class="fas fa-database text-xl"></i><span id="nav-label-dat" class="text-[9px] font-bold mt-1 uppercase">Datos</span></button>
+    </nav>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

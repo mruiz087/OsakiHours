@@ -1,0 +1,15 @@
+{
+  "name": "OsakiHours",
+  "short_name": "OsakiHours",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0072bc",
+  "theme_color": "#0072bc",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2376/2376100.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
