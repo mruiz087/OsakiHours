@@ -301,5 +301,6 @@ function deleteCurrentDay() {
 function resetAllData() { if(confirm("¿Borrar?")) { localStorage.clear(); location.reload(); } }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(err => console.log("SW no registrado", err));
+  navigator.serviceWorker.register('./sw.js').catch(err => console.log("SW no registrado", err));
 }
+
