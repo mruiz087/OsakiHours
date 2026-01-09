@@ -15,10 +15,10 @@
         .badge-M { color: #ca8a04; font-weight: 900; }
         .badge-T { color: #ea580c; font-weight: 900; }
         .badge-N { color: #4338ca; font-weight: 900; }
-        .day-vacation { background-color: #fff7ed !important; border-bottom: 3px solid #f97316 !important; }
-        .day-ap { background-color: #faf5ff !important; border-bottom: 3px solid #a855f7 !important; }
-        .day-holiday { background-color: #fef2f2 !important; border-bottom: 3px solid #ef4444 !important; }
-        .day-work { background-color: #eff6ff !important; border-bottom: 3px solid #3b82f6 !important; }
+        .day-vacation { background-color: #fff7ed !important; border-bottom: 2px solid #f97316 !important; }
+        .day-ap { background-color: #faf5ff !important; border-bottom: 2px solid #a855f7 !important; }
+        .day-holiday { background-color: #fef2f2 !important; border-bottom: 2px solid #ef4444 !important; }
+        .day-work { background-color: #eff6ff !important; border-bottom: 2px solid #3b82f6 !important; }
         .day-off-contract { opacity: 0.3; background-color: #f1f5f9 !important; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -31,181 +31,302 @@
         .balance-negative { color: #ef4444 !important; }
     </style>
 </head>
-<body class="bg-slate-50 pb-24">
+<body class="bg-slate-50 pb-20">
 
-    <header class="osaki-blue text-white p-6 rounded-b-[2.5rem] shadow-xl sticky top-0 z-30">
-        <div class="flex justify-center items-center mb-4">
-            <h1 class="text-xl font-black italic tracking-tighter">OsakiHours</h1>
-        </div>
-        <div class="bg-white p-5 rounded-3xl shadow-inner text-center">
-            <p id="label-balance" class="text-[10px] font-black uppercase text-slate-400 mb-1">Balance Exceso / Defecto</p>
-            <div class="mb-3">
-                <span id="total-balance" class="text-5xl font-black text-slate-800 transition-colors">0h 00m</span>
+    <header class="osaki-blue text-white p-3 pt-4 rounded-b-[2rem] shadow-lg sticky top-0 z-30">
+        <div class="bg-white p-3 rounded-2xl shadow-inner text-center">
+            <p id="label-balance" class="text-[9px] font-black uppercase text-slate-400">Balance Exceso / Defecto</p>
+            <div class="mb-1">
+                <span id="total-balance" class="text-4xl font-black text-slate-800 transition-colors">0h 00m</span>
             </div>
-            <div class="flex justify-around items-center border-t border-slate-100 pt-3 mt-1">
-                <div class="text-center">
-                    <p id="label-vac-top" class="text-[9px] uppercase font-black text-orange-400">Vacaciones</p>
-                    <p class="text-lg font-black text-slate-700" id="remaining-vac">0h 00m</p>
+            <div class="flex justify-around items-center border-t border-slate-50 pt-2">
+                <div class="flex items-center gap-2">
+                    <p class="text-[8px] uppercase font-black text-orange-400">V:</p>
+                    <p class="text-sm font-black text-slate-700" id="remaining-vac">0h 00m</p>
                 </div>
-                <div class="w-px bg-slate-100 h-8"></div>
-                <div class="text-center">
-                    <p id="label-ap-top" class="text-[9px] uppercase font-black text-purple-500">Horas AP</p>
-                    <p class="text-lg font-black text-slate-700" id="remaining-ap">0h 00m</p>
+                <div class="w-px bg-slate-100 h-4"></div>
+                <div class="flex items-center gap-2">
+                    <p class="text-[8px] uppercase font-black text-purple-500">AP:</p>
+                    <p class="text-sm font-black text-slate-700" id="remaining-ap">0h 00m</p>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="p-4">
-        <section id="tab-calendar" class="tab-content active space-y-4">
-            <div class="bg-white p-4 rounded-3xl border border-slate-200 grid grid-cols-2 gap-4 shadow-sm">
+    <main class="p-3">
+        <section id="tab-calendar" class="tab-content active space-y-3">
+            <div class="bg-white p-3 rounded-2xl border border-slate-200 grid grid-cols-2 gap-3 shadow-sm">
                 <div>
-                    <label id="label-start" class="text-[9px] font-bold text-slate-400 block mb-1 uppercase">Inicio Contrato</label>
-                    <input type="date" id="start-date" onchange="updateContract()" class="bg-slate-50 p-2 rounded-xl text-xs font-bold w-full border-none">
+                    <label class="text-[8px] font-bold text-slate-400 block uppercase">Inicio</label>
+                    <input type="date" id="start-date" onchange="updateContract()" class="bg-slate-50 p-1.5 rounded-lg text-[10px] font-bold w-full border-none">
                 </div>
                 <div>
-                    <label id="label-end" class="text-[9px] font-bold text-slate-400 block mb-1 uppercase">Fin Contrato</label>
-                    <input type="date" id="end-date" onchange="updateContract()" class="bg-slate-50 p-2 rounded-xl text-xs font-bold w-full border-none">
+                    <label class="text-[8px] font-bold text-slate-400 block uppercase">Fin</label>
+                    <input type="date" id="end-date" onchange="updateContract()" class="bg-slate-50 p-1.5 rounded-lg text-[10px] font-bold w-full border-none">
                 </div>
             </div>
 
-            <div class="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden">
-                <div class="osaki-blue p-4 flex justify-between items-center text-white text-xs font-bold uppercase">
-                    <button onclick="changeMonth(-1)" class="p-2 px-4"><i class="fas fa-chevron-left"></i></button>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="osaki-blue p-2.5 flex justify-between items-center text-white text-[10px] font-bold uppercase">
+                    <button onclick="changeMonth(-1)" class="px-3"><i class="fas fa-chevron-left"></i></button>
                     <span id="current-month-year"></span>
-                    <button onclick="changeMonth(1)" class="p-2 px-4"><i class="fas fa-chevron-right"></i></button>
+                    <button onclick="changeMonth(1)" class="px-3"><i class="fas fa-chevron-right"></i></button>
                 </div>
-                <div class="grid grid-cols-7 text-[10px] font-black text-slate-400 text-center py-3 bg-slate-50 border-b">
+                <div class="grid grid-cols-7 text-[9px] font-black text-slate-400 text-center py-2 bg-slate-50 border-b">
                     <div>LU</div><div>MA</div><div>MI</div><div>JU</div><div>VI</div><div>SA</div><div>DO</div>
                 </div>
-                <div id="calendar-grid" class="grid grid-cols-7 gap-px bg-slate-200"></div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-px bg-slate-100"></div>
             </div>
         </section>
 
-        <section id="tab-settings" class="tab-content space-y-6">
-            <h2 id="title-settings" class="text-sm font-black text-slate-800 uppercase tracking-widest px-2">Ajustes</h2>
-            
-            <div class="bg-white p-5 rounded-[2rem] border border-slate-200 shadow-sm">
-                <label id="label-lang" class="text-[10px] font-black text-slate-400 block uppercase border-b pb-2 mb-3">Idioma / Hizkuntza</label>
-                <div class="flex gap-2">
-                    <button onclick="changeLanguage('es')" id="lang-es" class="flex-1 py-3 rounded-xl text-xs font-bold border-2 transition-all">Español</button>
-                    <button onclick="changeLanguage('eu')" id="lang-eu" class="flex-1 py-3 rounded-xl text-xs font-bold border-2 transition-all">Euskara</button>
+        <section id="tab-settings" class="tab-content space-y-4">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <label class="text-[10px] font-black text-slate-400 uppercase border-b pb-1 block">Bolsa y Turnos</label>
+                <div class="grid grid-cols-3 gap-2">
+                    <div><p class="text-[7px] font-bold mb-1">TRABAJO</p><input type="number" id="set-work" onchange="updateSettings()" class="w-full p-2 bg-slate-50 rounded-lg text-xs font-bold"></div>
+                    <div><p class="text-[7px] font-bold mb-1 text-orange-500">VACAC.</p><input type="number" id="set-vac" onchange="updateSettings()" class="w-full p-2 bg-slate-50 rounded-lg text-xs font-bold"></div>
+                    <div><p class="text-[7px] font-bold mb-1 text-purple-500">AP</p><input type="number" id="set-ap" onchange="updateSettings()" class="w-full p-2 bg-slate-50 rounded-lg text-xs font-bold"></div>
                 </div>
-            </div>
-
-            <div class="bg-white p-5 rounded-[2rem] border border-slate-200 shadow-sm space-y-4">
-                <label id="label-holidays" class="text-[10px] font-black text-slate-400 block uppercase border-b pb-2">Festivos Locales</label>
-                <div class="flex gap-2">
-                    <input type="date" id="local-holiday-input" class="flex-1 p-3 bg-slate-50 rounded-xl text-xs font-bold border-none">
-                    <button id="btn-add-holiday" onclick="addLocalHoliday()" class="osaki-blue text-white px-4 rounded-xl text-xs font-bold">Añadir</button>
-                </div>
-                <div id="local-holidays-list" class="flex flex-wrap gap-2 pt-2"></div>
-            </div>
-
-            <div class="bg-white p-5 rounded-[2rem] border border-slate-200 space-y-6 shadow-sm">
-                <div class="space-y-4">
-                    <label id="label-bag" class="text-[10px] font-black text-slate-400 block uppercase border-b pb-2">Bolsa Anual (Horas)</label>
-                    <div class="grid grid-cols-3 gap-3">
-                        <div><p class="text-[8px] font-bold mb-1">TRABAJO</p><input type="number" id="set-work" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
-                        <div><p id="label-set-vac" class="text-[8px] font-bold mb-1 text-orange-500">VACAC.</p><input type="number" id="set-vac" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
-                        <div><p class="text-[8px] font-bold mb-1 text-purple-500">AP</p><input type="number" id="set-ap" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
-                    </div>
-                </div>
-                
-                <div class="space-y-4">
-                    <label id="label-shift-val" class="text-[10px] font-black text-slate-400 block uppercase border-b pb-2">Valores Turnos TRABAJO (Dec)</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><p class="text-[8px] font-bold mb-1 uppercase">Diurno (M/T)</p><input type="number" step="0.01" id="set-work-day" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
-                        <div><p class="text-[8px] font-bold mb-1 uppercase">Nocturno (N)</p><input type="number" step="0.01" id="set-work-night" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <label id="label-shift-apvac" class="text-[10px] font-black text-slate-400 block uppercase border-b pb-2">Valores AP / VACACIONES (Dec)</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><p class="text-[8px] font-bold mb-1 uppercase">Diurno</p><input type="number" step="0.01" id="set-apvac-day" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
-                        <div><p class="text-[8px] font-bold mb-1 uppercase">Nocturno</p><input type="number" step="0.01" id="set-apvac-night" onchange="updateSettings()" class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold"></div>
-                    </div>
+                <div class="grid grid-cols-2 gap-2 pt-2 border-t">
+                    <div><p class="text-[7px] font-bold mb-1 uppercase text-blue-600">Trabajo Diurno</p><input type="number" step="0.01" id="set-work-day" onchange="updateSettings()" class="w-full p-2 bg-slate-50 rounded-lg text-xs font-bold"></div>
+                    <div><p class="text-[7px] font-bold mb-1 uppercase text-blue-900">Trabajo Noche</p><input type="number" step="0.01" id="set-work-night" onchange="updateSettings()" class="w-full p-2 bg-slate-50 rounded-lg text-xs font-bold"></div>
+                    <div><p class="text-[7px] font-bold mb-1 uppercase text-orange-600">Vacas/AP Diurno</p><input type="number" step="0.01" id="set-apvac-day" onchange="updateSettings()" class="w-full p-2 bg-slate-50 rounded-lg text-xs font-bold"></div>
+                    <div><p class="text-[7px] font-bold mb-1 uppercase text-orange-900">Vacas/AP Noche</p><input type="number" step="0.01" id="set-apvac-night" onchange="updateSettings()" class="w-full p-2 bg-slate-50 rounded-lg text-xs font-bold"></div>
                 </div>
             </div>
         </section>
 
-        <section id="tab-data" class="tab-content space-y-4">
-            <h2 id="title-data" class="text-sm font-black text-slate-800 uppercase tracking-widest px-2">Datos y Backup</h2>
-            <div class="grid grid-cols-1 gap-4">
-                <button onclick="exportToPDF()" class="bg-white p-6 rounded-[2rem] border border-slate-200 flex items-center gap-4 shadow-sm active:scale-95 transition-transform">
-                    <div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-xl"><i class="fas fa-file-pdf"></i></div>
-                    <div class="text-left">
-                        <p id="btn-pdf" class="font-bold text-slate-800">Descargar PDF</p>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">PDF</p>
-                    </div>
-                </button>
-                <button onclick="exportBackup()" class="bg-white p-6 rounded-[2rem] border border-slate-200 flex items-center gap-4 shadow-sm active:scale-95 transition-transform">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl"><i class="fas fa-file-export"></i></div>
-                    <div class="text-left">
-                        <p id="btn-export" class="font-bold text-slate-800">Exportar Copia JSON</p>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Backup</p>
-                    </div>
-                </button>
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-200 flex items-center gap-4 shadow-sm relative overflow-hidden">
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl"><i class="fas fa-file-import"></i></div>
-                    <div class="text-left">
-                        <p id="btn-import" class="font-bold text-slate-800">Restaurar Copia</p>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">JSON</p>
-                    </div>
-                    <input type="file" id="import-file" class="absolute inset-0 opacity-0 cursor-pointer" accept=".json" onchange="importBackup(this)">
-                </div>
-                <div class="mt-8 border-t border-slate-200 pt-8">
-                    <button id="btn-reset" onclick="resetAllData()" class="w-full py-4 text-slate-400 font-bold uppercase text-[10px] tracking-widest">Borrar datos de contrato y turnos</button>
-                </div>
+        <section id="tab-data" class="tab-content space-y-3">
+            <button onclick="exportToPDF()" class="w-full bg-white p-4 rounded-2xl border border-slate-200 flex items-center gap-3 text-sm font-bold shadow-sm"><i class="fas fa-file-pdf text-red-500"></i> PDF</button>
+            <button onclick="exportBackup()" class="w-full bg-white p-4 rounded-2xl border border-slate-200 flex items-center gap-3 text-sm font-bold shadow-sm"><i class="fas fa-file-export text-blue-500"></i> Exportar JSON</button>
+            <div class="relative bg-white p-4 rounded-2xl border border-slate-200 flex items-center gap-3 text-sm font-bold shadow-sm overflow-hidden">
+                <i class="fas fa-file-import text-emerald-500"></i> Importar JSON
+                <input type="file" class="absolute inset-0 opacity-0" accept=".json" onchange="importBackup(this)">
             </div>
         </section>
     </main>
 
     <div id="shift-modal" class="fixed inset-0 bg-slate-900/70 hidden z-50 flex items-end">
-        <div class="bg-white w-full rounded-t-[2.5rem] p-8 shadow-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h3 id="modal-date-title" class="font-black text-slate-800 text-lg uppercase">Fecha</h3>
-                <button onclick="closeModal()" class="text-slate-300 text-4xl">&times;</button>
+        <div class="bg-white w-full rounded-t-[2rem] p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-date-title" class="font-black text-slate-800 text-base uppercase">Fecha</h3>
+                <button onclick="closeModal()" class="text-slate-300 text-3xl">&times;</button>
             </div>
-            <div class="space-y-6">
-                <div class="grid grid-cols-3 gap-3">
-                    <button onclick="selectMainType('work')" id="type-work" class="type-btn p-4 rounded-xl border-2 text-[10px] font-bold uppercase">Laboral</button>
-                    <button onclick="selectMainType('vacation')" id="type-vacation" class="type-btn p-4 rounded-xl border-2 text-[10px] font-bold uppercase">Vacas</button>
-                    <button onclick="selectMainType('ap')" id="type-ap" class="type-btn p-4 rounded-xl border-2 text-[10px] font-bold uppercase">AP</button>
+            <div class="space-y-4">
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="selectMainType('work')" id="type-work" class="type-btn p-3 rounded-xl border-2 text-[10px] font-bold">Laboral</button>
+                    <button onclick="selectMainType('vacation')" id="type-vacation" class="type-btn p-3 rounded-xl border-2 text-[10px] font-bold">Vacas</button>
+                    <button onclick="selectMainType('ap')" id="type-ap" class="type-btn p-3 rounded-xl border-2 text-[10px] font-bold">AP</button>
                 </div>
-                
                 <div id="shift-selector-container">
-                    <div id="shifts-work-ap" class="flex gap-3">
-                        <button onclick="setShift('M', this)" id="btn-M" class="shift-btn flex-1 py-5 rounded-2xl flex flex-col items-center gap-2"><i class="fas fa-sun text-lg"></i><span class="text-[10px] font-bold">M</span></button>
-                        <button onclick="setShift('T', this)" id="btn-T" class="shift-btn flex-1 py-5 rounded-2xl flex flex-col items-center gap-2"><i class="fas fa-cloud-sun text-lg"></i><span class="text-[10px] font-bold">T</span></button>
-                        <button onclick="setShift('N', this)" id="btn-N" class="shift-btn flex-1 py-5 rounded-2xl flex flex-col items-center gap-2"><i class="fas fa-moon text-lg"></i><span class="text-[10px] font-bold">N</span></button>
+                    <div id="shifts-work-ap" class="flex gap-2">
+                        <button onclick="setShift('M', this)" id="btn-M" class="shift-btn flex-1 py-4 rounded-xl flex flex-col items-center gap-1"><i class="fas fa-sun"></i><span class="text-[9px]">M</span></button>
+                        <button onclick="setShift('T', this)" id="btn-T" class="shift-btn flex-1 py-4 rounded-xl flex flex-col items-center gap-1"><i class="fas fa-cloud-sun"></i><span class="text-[9px]">T</span></button>
+                        <button onclick="setShift('N', this)" id="btn-N" class="shift-btn flex-1 py-4 rounded-xl flex flex-col items-center gap-1"><i class="fas fa-moon"></i><span class="text-[9px]">N</span></button>
                     </div>
-                    <div id="shifts-vacation" class="flex gap-3 hidden">
-                        <button onclick="setShift('V-D', this)" id="btn-V-D" class="shift-btn flex-1 py-5 rounded-2xl flex flex-col items-center gap-2"><i class="fas fa-sun text-lg text-orange-500"></i><span id="label-vac-day" class="text-[10px] font-bold">Diurna</span></button>
-                        <button onclick="setShift('V-N', this)" id="btn-V-N" class="shift-btn flex-1 py-5 rounded-2xl flex flex-col items-center gap-2"><i class="fas fa-moon text-lg text-orange-500"></i><span id="label-vac-night" class="text-[10px] font-bold">Nocturna</span></button>
+                    <div id="shifts-vacation" class="flex gap-2 hidden">
+                        <button onclick="setShift('V-D', this)" id="btn-V-D" class="shift-btn flex-1 py-4 rounded-xl flex flex-col items-center gap-1"><i class="fas fa-sun text-orange-500"></i><span class="text-[9px]">Día</span></button>
+                        <button onclick="setShift('V-N', this)" id="btn-V-N" class="shift-btn flex-1 py-4 rounded-xl flex flex-col items-center gap-1"><i class="fas fa-moon text-orange-500"></i><span class="text-[9px]">Noche</span></button>
                     </div>
                 </div>
-
                 <div id="overlap-container">
-                    <label id="label-overlap" class="text-[10px] font-black text-slate-400 uppercase block mb-2 text-center">Solape (Minutos)</label>
-                    <input type="number" id="input-overlap" value="0" class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-center text-xl text-blue-600 border-none">
+                    <input type="number" id="input-overlap" value="0" placeholder="Solape min." class="w-full p-3 bg-slate-50 rounded-xl font-bold text-center text-blue-600 border-none">
                 </div>
-                <div class="flex gap-3">
-                    <button id="btn-delete" onclick="deleteCurrentDay()" class="hidden bg-red-50 text-red-500 px-6 rounded-3xl font-bold text-[10px] uppercase">Borrar</button>
-                    <button id="btn-save" onclick="saveShift()" class="flex-1 osaki-blue text-white py-5 rounded-3xl font-black uppercase text-xs tracking-widest">Guardar</button>
+                <div class="flex gap-2">
+                    <button id="btn-delete" onclick="deleteCurrentDay()" class="hidden bg-red-50 text-red-500 px-4 rounded-2xl font-bold uppercase text-[9px]">Borrar</button>
+                    <button id="btn-save" onclick="saveShift()" class="flex-1 osaki-blue text-white py-4 rounded-2xl font-black uppercase text-xs">Guardar</button>
                 </div>
             </div>
             <input type="hidden" id="input-date">
         </div>
     </div>
 
-    <nav class="fixed bottom-0 w-full bg-white/90 backdrop-blur-md border-t p-4 flex justify-around items-center z-40">
-        <button onclick="showTab('calendar')" id="nav-calendar" class="nav-btn active flex flex-col items-center"><i class="fas fa-calendar-alt text-xl"></i><span id="nav-label-cal" class="text-[9px] font-bold mt-1 uppercase">Calendario</span></button>
-        <button onclick="showTab('settings')" id="nav-settings" class="nav-btn text-slate-400 flex flex-col items-center"><i class="fas fa-cog text-xl"></i><span id="nav-label-set" class="text-[9px] font-bold mt-1 uppercase">Ajustes</span></button>
-        <button onclick="showTab('data')" id="nav-data" class="nav-btn text-slate-400 flex flex-col items-center"><i class="fas fa-database text-xl"></i><span id="nav-label-dat" class="text-[9px] font-bold mt-1 uppercase">Datos</span></button>
+    <nav class="fixed bottom-0 w-full bg-white border-t p-2 flex justify-around items-center z-40">
+        <button onclick="showTab('calendar')" id="nav-calendar" class="nav-btn active flex flex-col items-center"><i class="fas fa-calendar-alt"></i><span class="text-[8px] font-bold mt-1">CALENDARIO</span></button>
+        <button onclick="showTab('settings')" id="nav-settings" class="nav-btn text-slate-400 flex flex-col items-center"><i class="fas fa-cog"></i><span class="text-[8px] font-bold mt-1">AJUSTES</span></button>
+        <button onclick="showTab('data')" id="nav-data" class="nav-btn text-slate-400 flex flex-col items-center"><i class="fas fa-database"></i><span class="text-[8px] font-bold mt-1">DATOS</span></button>
     </nav>
 
-    <script src="js/app.js"></script>
+    <script>
+        const OFFICIAL_HOLIDAYS = ["01-01", "01-06", "04-02", "04-03", "04-06", "05-01", "07-25", "08-15", "10-12", "11-01", "12-06", "12-08", "12-25"];
+        const DEFAULT_SETTINGS = { work: 1592, vacation: 168, ap: 40, workDay: 7.17, workNight: 11.17, apVacDay: 7, apVacNight: 10 };
+        let state = {
+            history: JSON.parse(localStorage.getItem('osaki_history')) || [],
+            contract: JSON.parse(localStorage.getItem('osaki_contract')) || { start: '', end: '' },
+            settings: JSON.parse(localStorage.getItem('osaki_settings')) || DEFAULT_SETTINGS,
+            lang: 'es'
+        };
+        let viewDate = new Date(); let selectedShiftHours = 0; let currentType = 'work'; let lastSelectedBtnLabel = '';
+
+        function formatHours(decimal) {
+            const isNeg = decimal < 0; const absVal = Math.abs(decimal);
+            const h = Math.floor(absVal); const m = Math.round((absVal - h) * 60);
+            return `${isNeg ? '-' : ''}${h}h ${String(m).padStart(2, '0')}m`;
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid'); grid.innerHTML = '';
+            const year = viewDate.getFullYear(); const month = viewDate.getMonth();
+            document.getElementById('current-month-year').innerText = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(viewDate);
+            const firstDay = new Date(year, month, 1).getDay(); const totalDays = new Date(year, month + 1, 0).getDate();
+            let startOffset = (firstDay === 0) ? 6 : firstDay - 1;
+            for (let i = 0; i < startOffset; i++) grid.innerHTML += `<div class="bg-slate-50 h-14 opacity-50"></div>`;
+            for (let day = 1; day <= totalDays; day++) {
+                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                const shift = state.history.find(e => e.date === dateStr);
+                const isHoliday = OFFICIAL_HOLIDAYS.includes(dateStr.substring(5));
+                const inContract = state.contract.start && state.contract.end && new Date(dateStr) >= new Date(state.contract.start) && new Date(dateStr) <= new Date(state.contract.end);
+                let css = inContract ? 'bg-white' : 'day-off-contract';
+                if (shift) {
+                    if (shift.type === 'vacation') css = 'day-vacation';
+                    else if (shift.type === 'ap') css = 'day-ap';
+                    else if (isHoliday) css = 'day-holiday';
+                    else css = 'day-work';
+                } else if (isHoliday && inContract) css = 'day-holiday';
+                
+                let icons = isHoliday ? '<span class="absolute top-0.5 right-1 text-[7px] text-red-500 font-black">★</span>' : '';
+                if (shift && shift.type === 'vacation') {
+                    icons += `<span class="absolute top-0.5 left-1 text-[7px] text-orange-500"><i class="fas fa-${shift.btnLabel === 'V-N' ? 'moon' : 'sun'}"></i></span>`;
+                }
+                
+                grid.innerHTML += `<div onclick="attemptOpenDay('${dateStr}', ${inContract})" class="${css} h-14 border-r border-b border-slate-100 flex flex-col items-center justify-center relative cursor-pointer active:scale-95 transition-transform">
+                    ${icons}<span class="text-xs font-bold ${isHoliday ? 'text-red-600' : ''}">${day}</span>
+                    ${shift && shift.btnLabel && shift.type !== 'vacation' ? `<span class="text-[9px] mt-0.5 badge-${shift.btnLabel}">${shift.btnLabel}</span>` : ''}
+                </div>`;
+            }
+        }
+
+        function attemptOpenDay(d, inc) { if(!state.contract.start || !state.contract.end) return alert("Fija fechas contrato"); if(inc) openDay(d); }
+        function openDay(date) {
+            document.getElementById('input-date').value = date;
+            document.getElementById('modal-date-title').innerText = new Date(date).toLocaleDateString('es-ES', { day:'numeric', month:'long'});
+            const existing = state.history.find(e => e.date === date);
+            if(existing) {
+                selectMainType(existing.type); document.getElementById('input-overlap').value = existing.overlap || 0;
+                if(existing.btnLabel) setShift(existing.btnLabel, document.getElementById('btn-'+existing.btnLabel) || document.getElementById('btn-M'));
+                document.getElementById('btn-delete').classList.remove('hidden');
+            } else { selectMainType('work'); document.getElementById('btn-delete').classList.add('hidden'); }
+            document.getElementById('shift-modal').classList.remove('hidden');
+        }
+
+        function selectMainType(t) {
+            currentType = t;
+            document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('border-blue-500','bg-blue-50','text-blue-600'));
+            document.getElementById('type-'+t).classList.add('border-blue-500','bg-blue-50','text-blue-600');
+            document.getElementById('shifts-work-ap').classList.toggle('hidden', t === 'vacation');
+            document.getElementById('shifts-vacation').classList.toggle('hidden', t !== 'vacation');
+            document.getElementById('overlap-container').classList.toggle('hidden', t !== 'work');
+        }
+
+        function setShift(type, btn) {
+            document.querySelectorAll('.shift-btn').forEach(b => b.classList.remove('shift-selected-M','shift-selected-T','shift-selected-N','shift-selected-V-D','shift-selected-V-N'));
+            btn.classList.add('shift-selected-'+type); lastSelectedBtnLabel = type;
+            if(currentType === 'work') selectedShiftHours = (type==='N') ? state.settings.workNight : state.settings.workDay;
+            else selectedShiftHours = (type==='N'||type==='V-N') ? state.settings.apVacNight : state.settings.apVacDay;
+        }
+
+        function saveShift() {
+            const date = document.getElementById('input-date').value;
+            const overlap = currentType === 'work' ? (parseFloat(document.getElementById('input-overlap').value) || 0) : 0;
+            state.history = state.history.filter(e => e.date !== date);
+            state.history.push({ date, type: currentType, real: selectedShiftHours + (overlap/60), overlap, btnLabel: lastSelectedBtnLabel });
+            localStorage.setItem('osaki_history', JSON.stringify(state.history));
+            recalculateEverything(); renderCalendar(); closeModal();
+        }
+
+        function updateContract() {
+            state.contract = { start: document.getElementById('start-date').value, end: document.getElementById('end-date').value };
+            localStorage.setItem('osaki_contract', JSON.stringify(state.contract));
+            recalculateEverything(); renderCalendar();
+        }
+
+        function updateSettings() {
+            state.settings = {
+                work: parseFloat(document.getElementById('set-work').value), vacation: parseFloat(document.getElementById('set-vac').value),
+                ap: parseFloat(document.getElementById('set-ap').value), workDay: parseFloat(document.getElementById('set-work-day').value),
+                workNight: parseFloat(document.getElementById('set-work-night').value), apVacDay: parseFloat(document.getElementById('set-apvac-day').value),
+                apVacNight: parseFloat(document.getElementById('set-apvac-night').value)
+            };
+            localStorage.setItem('osaki_settings', JSON.stringify(state.settings));
+            recalculateEverything();
+        }
+
+        function recalculateEverything() {
+            let ratios = { work: 0, vac: 0, ap: 0 };
+            if (state.contract.start && state.contract.end) {
+                const diff = Math.ceil(Math.abs(new Date(state.contract.end) - new Date(state.contract.start)) / 86400000) + 1;
+                const r = Math.min(diff / 365, 1);
+                ratios.work = state.settings.work * r; ratios.vac = state.settings.vacation * r; ratios.ap = state.settings.ap * r;
+            }
+            let worked = 0, uVac = 0, uAP = 0;
+            state.history.forEach(e => {
+                if (e.type === 'work') worked += e.real;
+                else if (e.type === 'vacation') uVac += e.real;
+                else if (e.type === 'ap') uAP += e.real;
+            });
+            const balance = worked - ratios.work;
+            const balanceEl = document.getElementById('total-balance');
+            balanceEl.innerText = formatHours(balance);
+            balanceEl.className = "text-4xl font-black transition-colors " + (balance >= 0 ? 'balance-positive' : 'balance-negative');
+            document.getElementById('remaining-vac').innerText = formatHours(ratios.vac - uVac);
+            document.getElementById('remaining-ap').innerText = formatHours(ratios.ap - uAP);
+        }
+
+        function showTab(t) {
+            document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(x => { x.classList.add('text-slate-400'); x.classList.remove('active'); });
+            document.getElementById('tab-'+t).classList.add('active');
+            document.getElementById('nav-'+t).classList.add('active');
+            document.getElementById('nav-'+t).classList.remove('text-slate-400');
+        }
+
+        function exportBackup() {
+            const blob = new Blob([JSON.stringify(state)], {type: "application/json"});
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "osaki_backup.json"; a.click();
+        }
+
+        function importBackup(input) {
+            const file = input.files[0]; if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                state = JSON.parse(e.target.result);
+                localStorage.setItem('osaki_history', JSON.stringify(state.history));
+                localStorage.setItem('osaki_settings', JSON.stringify(state.settings));
+                localStorage.setItem('osaki_contract', JSON.stringify(state.contract));
+                location.reload();
+            };
+            reader.readAsText(file);
+        }
+
+        async function exportToPDF() {
+            const { jsPDF } = window.jspdf; const doc = new jsPDF();
+            doc.text(`Osakidetza Report`, 14, 20);
+            const rows = state.history.sort((a,b)=>new Date(a.date)-new Date(b.date)).map(e => [new Date(e.date).toLocaleDateString(), e.type.toUpperCase(), e.btnLabel || '-', formatHours(e.real)]);
+            doc.autoTable({ head: [['Fecha', 'Tipo', 'Turno', 'H:min']], body: rows, startY: 30 });
+            doc.save("Cuadrante.pdf");
+        }
+
+        function closeModal() { document.getElementById('shift-modal').classList.add('hidden'); }
+        function changeMonth(o) { viewDate.setMonth(viewDate.getMonth() + o); renderCalendar(); }
+        function deleteCurrentDay() {
+            state.history = state.history.filter(e => e.date !== document.getElementById('input-date').value);
+            localStorage.setItem('osaki_history', JSON.stringify(state.history));
+            recalculateEverything(); renderCalendar(); closeModal();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const s = state.settings;
+            document.getElementById('set-work').value = s.work;
+            document.getElementById('set-vac').value = s.vacation;
+            document.getElementById('set-ap').value = s.ap;
+            document.getElementById('set-work-day').value = s.workDay;
+            document.getElementById('set-work-night').value = s.workNight;
+            document.getElementById('set-apvac-day').value = s.apVacDay;
+            document.getElementById('set-apvac-night').value = s.apVacNight;
+            if(state.contract.start) document.getElementById('start-date').value = state.contract.start;
+            if(state.contract.end) document.getElementById('end-date').value = state.contract.end;
+            recalculateEverything(); renderCalendar();
+        });
+    </script>
 </body>
 </html>
